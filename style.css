@@ -1,0 +1,126 @@
+:root {
+    color-scheme: light dark;
+  }
+  
+
+      body{
+          background-color: #323232;
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      }
+
+      button{
+        padding: 1em 2em;
+        background-color: #161a20;
+        border: none;
+        color: #f0f0f0;
+        border-radius: 1000px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+
+      button::after{
+        content: '';
+        position: absolute;
+        height: 107%;
+        width: 105%;
+        border-radius: 1000px;
+        background-image: linear-gradient(to bottom right, #008cff, #e100ff);
+        z-index: -1;
+        
+        /*transition-property: transform;
+        transition-duration: 0.3s;
+        transition-timing-function: ease;
+        transition-delay: 0s; */
+        transition: all; 
+    
+        }
+
+       /* button:hover { 
+                        
+              animation: rotate-sequence-one 3s forwards;
+              
+          }
+          
+          @keyframes rotate-sequence-one {
+            
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(-20deg);
+            }
+
+           }
+
+           @keyframes rotate-sequence-two {
+            
+            from {
+                transform: rotate(0deg);
+              }
+  
+              to {
+                  transform: rotate(20deg);
+                }
+  
+              
+                from {
+                  transform: rotate(-20deg);
+                }
+    
+                to {
+                    transform: rotate(20deg);
+                  }
+
+           } */
+
+
+           button:hover {
+            animation: rotate-combo 3s linear infinite;
+          }
+          
+          @keyframes rotate-combo {
+            0% {
+              transform: rotate(0deg);
+            }
+            25% {
+              transform: rotate(-7deg); /* First animation ends */
+            }
+
+            50% {
+                transform: rotate(0deg)
+            }
+
+            75% {
+              transform: rotate(7deg); /* Second animation */
+            }
+
+            100% {
+                 transform: rotate(0deg);
+            }
+          }
+          
+
+
+
+          h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 30px;
+            text-transform: uppercase;
+            text-align: center;
+            position: absolute;
+            bottom: 75%;
+            
+            background: linear-gradient(to right, #e100ff, #8f68ff, #008cff, #8f68ff, #e100ff);
+            background-size: 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
