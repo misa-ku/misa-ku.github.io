@@ -28,8 +28,8 @@
       button::after{
         content: '';
         position: absolute;
-        height: 107%;
-        width: 105%;
+        height: 120%;
+        width: 116%;
         border-radius: 1000px;
         background-image: linear-gradient(to bottom right, #008cff, #e100ff);
         z-index: -1;
