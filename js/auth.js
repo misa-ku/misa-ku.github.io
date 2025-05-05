@@ -16,7 +16,7 @@ async function redirectToAuth() {
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: '131',
-    redirect_uri: 'https://DEINUSERNAME.github.io/oauth/callback/',
+    redirect_uri: 'https://misa-ku.github.io/oauth/callback/',
     scope: 'read:stundenplan',
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
