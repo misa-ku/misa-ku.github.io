@@ -15,8 +15,8 @@ async function redirectToAuth() {
 
   const params = new URLSearchParams({
     response_type: 'code',
-    client_id: 'DEINE_CLIENT_ID_HIER',
-    redirect_uri: 'https://DEINUSERNAME.github.io/smartschool/oauth/callback/',
+    client_id: '131',
+    redirect_uri: 'https://DEINUSERNAME.github.io/oauth/callback/',
     scope: 'read:stundenplan',
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
