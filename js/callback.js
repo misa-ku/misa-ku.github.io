@@ -15,7 +15,7 @@ async function exchangeCodeForToken() {
   }
 
   // Setze hier wieder deine Werte ein
-  const clientId = "DEINE_CLIENT_ID_HIER";
+  const clientId = "131";
   const redirectUri = "https://misa-ku.github.io/oauth/callback/";
 
   const body = new URLSearchParams({
