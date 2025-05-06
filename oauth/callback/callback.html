@@ -24,7 +24,7 @@
         grant_type: 'authorization_code',
         client_id: '131',
         code: code,
-        redirect_uri: 'https://misa-ku.github.io/oauth/callback/login.html',
+        redirect_uri: 'https://misa-ku.github.io/oauth/callback/callback.html',
         code_verifier: codeVerifier
       };
 
@@ -42,22 +42,6 @@
         if (result.access_token) {
           document.getElementById('status').innerText = 'Access Token erhalten! ✅';
           console.log("Access Token:", result.access_token);
-          // Hier kannst du ihn weiterverwenden oder abspeichern
-        } else {
-          document.getElementById('status').innerText = 'Token konnte nicht abgerufen werden ❌';
-          console.error(result);
-        }
-      } catch (err) {
-        document.getElementById('status').innerText = 'Fehler beim Abrufen 😬';
-        console.error(err);
-      }
-    }
-
-    getAccessToken();
-
-    if (result.access_token) {
-          document.getElementById('status').innerText = 'Access Token erhalten! ✅';
-          console.log("Access Token:", result.access_token);
 
           // Stundenplan holen
           const planRes = await fetch('https://api.beste.schule/me/stundenplan', {
@@ -70,8 +54,17 @@
           console.log("Stundenplan:", plan);
 
           document.getElementById('status').innerText = 'Dein Stundenplan ist in der Konsole 🎉';
+        } else {
+          document.getElementById('status').innerText = 'Token konnte nicht abgerufen werden ❌';
+          console.error(result);
         }
+      } catch (err) {
+        document.getElementById('status').innerText = 'Fehler beim Abrufen 😬';
+        console.error(err);
+      }
+    }
 
+    getAccessToken();
   </script>
 </body>
 </html>
