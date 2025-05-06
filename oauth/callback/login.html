@@ -5,7 +5,73 @@
   <title>Login Callback</title>
 </head>
 <body>
-  <h1>Login läuft... 🔄</h1>
-  <script src="/smartschool/js/callback.js"></script>
+  <h1>Login erfolgreich! 🔐</h1>
+  <p id="status">Token wird abgerufen...</p>
+
+  <script>
+    async function getAccessToken() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const codeVerifier = localStorage.getItem('code_verifier');
+
+      if (!code || !codeVerifier) {
+        document.getElementById('status').innerText = 'Fehlender Code oder Verifier 🤕';
+        return;
+      }
+
+      const tokenUrl = 'https://auth.beste.schule/oauth/token';
+      const data = {
+        grant_type: 'authorization_code',
+        client_id: '131',
+        code: code,
+        redirect_uri: 'https://misa-ku.github.io/oauth/callback/login.html',
+        code_verifier: codeVerifier
+      };
+
+      try {
+        const res = await fetch(tokenUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (result.access_token) {
+          document.getElementById('status').innerText = 'Access Token erhalten! ✅';
+          console.log("Access Token:", result.access_token);
+          // Hier kannst du ihn weiterverwenden oder abspeichern
+        } else {
+          document.getElementById('status').innerText = 'Token konnte nicht abgerufen werden ❌';
+          console.error(result);
+        }
+      } catch (err) {
+        document.getElementById('status').innerText = 'Fehler beim Abrufen 😬';
+        console.error(err);
+      }
+    }
+
+    getAccessToken();
+
+    if (result.access_token) {
+          document.getElementById('status').innerText = 'Access Token erhalten! ✅';
+          console.log("Access Token:", result.access_token);
+
+          // Stundenplan holen
+          const planRes = await fetch('https://api.beste.schule/me/stundenplan', {
+            headers: {
+              Authorization: `Bearer ${result.access_token}`
+            }
+          });
+
+          const plan = await planRes.json();
+          console.log("Stundenplan:", plan);
+
+          document.getElementById('status').innerText = 'Dein Stundenplan ist in der Konsole 🎉';
+        }
+
+  </script>
 </body>
 </html>
