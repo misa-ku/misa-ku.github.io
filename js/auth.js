@@ -28,7 +28,7 @@ async function redirectToAuth() {
   // Setze deine Infos hier ein ↓↓↓
   const clientId = "131";
   const redirectUri = "https://misa-ku.github.io/oauth/callback/callback.html";
-  const scope = "read:stundenplan"; // je nachdem, was du brauchst
+  const scope = ""; // je nachdem, was du brauchst
 
   const params = new URLSearchParams({
     response_type: "code",
