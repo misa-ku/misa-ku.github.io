@@ -1,3 +1,4 @@
+// Erstellt PKCE-Code Verifier und Code Challenge
 async function generatePKCE() {
   const codeVerifier = btoa(crypto.getRandomValues(new Uint8Array(32)).join('')).slice(0, 128);
   const encoder = new TextEncoder();
@@ -9,18 +10,19 @@ async function generatePKCE() {
   return { codeVerifier, codeChallenge: base64Digest };
 }
 
+// Leitet zur Beste.Schule Auth-Seite weiter mit PKCE
 async function redirectToAuth() {
   const { codeVerifier, codeChallenge } = await generatePKCE();
-  localStorage.setItem('code_verifier', codeVerifier);
+  localStorage.setItem('code_verifier', codeVerifier); // speichern für späteren Token-Austausch
 
   const params = new URLSearchParams({
     response_type: 'code',
-    client_id: '131',
-    redirect_uri: 'https://misa-ku.github.io/oauth/callback/',
+    client_id: '131', // deine echte Client-ID
+    redirect_uri: 'https://misa-ku.github.io/oauth/callback/login.html',
     scope: 'read:stundenplan',
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
   });
 
-  window.location = `https://beste.schule/oauth/authorize?${params.toString()}`;
+  window.location = `https://auth.beste.schule/oauth/authorize?${params.toString()}`;
 }
