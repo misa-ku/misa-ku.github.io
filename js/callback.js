@@ -26,6 +26,8 @@ async function exchangeCodeForToken() {
     code_verifier: codeVerifier,
   });
 
+    console.log("Verifier aus localStorage:", codeVerifier);
+  
   try {
     const response = await fetch("https://beste.schule/oauth/token", {
       method: "POST",
