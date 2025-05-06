@@ -1,28 +1,43 @@
-// Erstellt PKCE-Code Verifier und Code Challenge
 async function generatePKCE() {
-  const codeVerifier = btoa(crypto.getRandomValues(new Uint8Array(32)).join('')).slice(0, 128);
+  // Erstelle zufälligen Code Verifier
+  const array = new Uint8Array(32);
+  window.crypto.getRandomValues(array);
+  const codeVerifier = btoa(String.fromCharCode(...array))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+
+  // SHA-256 hash + base64-url encode = Code Challenge
   const encoder = new TextEncoder();
   const data = encoder.encode(codeVerifier);
-  const digest = await crypto.subtle.digest('SHA-256', data);
-  const base64Digest = btoa(String.fromCharCode(...new Uint8Array(digest)))
-    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const digest = await window.crypto.subtle.digest('SHA-256', data);
+  const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 
-  return { codeVerifier, codeChallenge: base64Digest };
+  return { codeVerifier, codeChallenge };
 }
 
-// Leitet zur Beste.Schule Auth-Seite weiter mit PKCE
 async function redirectToAuth() {
   const { codeVerifier, codeChallenge } = await generatePKCE();
-  localStorage.setItem('code_verifier', codeVerifier); // speichern für späteren Token-Austausch
+
+  // Speichere Code Verifier im localStorage für später
+  localStorage.setItem('pkce_code_verifier', codeVerifier);
+
+  // Setze deine Infos hier ein ↓↓↓
+  const clientId = "131";
+  const redirectUri = "https://misa-ku.github.io/oauth/callback/";
+  const scope = "read:stundenplan"; // je nachdem, was du brauchst
 
   const params = new URLSearchParams({
-    response_type: 'code',
-    client_id: '131', // deine echte Client-ID
-    redirect_uri: 'https://misa-ku.github.io/oauth/callback/login.html',
-    scope: 'read:stundenplan',
+    response_type: "code",
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    scope: scope,
     code_challenge: codeChallenge,
-    code_challenge_method: 'S256',
+    code_challenge_method: "S256",
   });
 
-  window.location = `https://auth.beste.schule/oauth/authorize?${params.toString()}`;
+  window.location.href = `https://beste.schule/oauth/authorize?${params.toString()}`;
 }
