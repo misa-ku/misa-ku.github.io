@@ -1,43 +1,40 @@
-async function generatePKCE() {
-  // Erstelle zufälligen Code Verifier
-  const array = new Uint8Array(32);
-  window.crypto.getRandomValues(array);
-  const codeVerifier = btoa(String.fromCharCode(...array))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+const clientId = "131"; // Deine Client-ID
+const redirectUri = "https://misa-ku.github.io/oauth/callback/callback.html"; // exakt wie bei der App registriert!
+const scope = "read:stundenplan"; // Passe ggf. an, je nach API-Berechtigung
 
-  // SHA-256 hash + base64-url encode = Code Challenge
-  const encoder = new TextEncoder();
-  const data = encoder.encode(codeVerifier);
-  const digest = await window.crypto.subtle.digest('SHA-256', data);
-  const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(digest)))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
-
-  return { codeVerifier, codeChallenge };
+// Generiere zufälligen Code Verifier
+function generateCodeVerifier(length = 128) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
+// SHA256 + base64-url encode (für code_challenge)
+async function generateCodeChallenge(codeVerifier) {
+  const data = new TextEncoder().encode(codeVerifier);
+  const digest = await window.crypto.subtle.digest("SHA-256", data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+// Login-Button-Funktion
 async function redirectToAuth() {
-  const { codeVerifier, codeChallenge } = await generatePKCE();
+  const codeVerifier = generateCodeVerifier();
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-  // Speichere Code Verifier im localStorage für später
-  localStorage.setItem('pkce_code_verifier', codeVerifier);
+  // Save Verifier für späteren Token-Tausch
+  localStorage.setItem("code_verifier", codeVerifier);
 
-  // Setze deine Infos hier ein ↓↓↓
-  const clientId = "131";
-  const redirectUri = "https://misa-ku.github.io/oauth/callback/callback.html";
-  const scope = ""; // je nachdem, was du brauchst
+  const authUrl = `https://beste.schule/oauth/authorize?` +
+    `client_id=${clientId}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&response_type=code` +
+    `&scope=${encodeURIComponent(scope)}` +
+    `&code_challenge=${codeChallenge}` +
+    `&code_challenge_method=S256`;
 
-  const params = new URLSearchParams({
-    response_type: "code",
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    scope: scope,
-    code_challenge: codeChallenge,
-    code_challenge_method: "S256",
-  });
-
-  window.location.href = `https://beste.schule/oauth/authorize?${params.toString()}`;
+  window.location.href = authUrl;
 }
