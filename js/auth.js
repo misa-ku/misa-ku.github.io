@@ -1,6 +1,6 @@
 const clientId = "131"; // Deine Client-ID
 const redirectUri = "https://misa-ku.github.io/oauth/callback/callback.html"; // exakt wie bei der App registriert!
-const scope = "read:time-tables"; // Passe ggf. an, je nach API-Berechtigung
+const scope = "read:timetables"; // Passe ggf. an, je nach API-Berechtigung
 
 // Generiere zufälligen Code Verifier
 function generateCodeVerifier(length = 128) {
